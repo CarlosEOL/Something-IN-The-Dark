@@ -57,7 +57,7 @@ namespace StarterAssets
 		public float BottomClamp = -90.0f;
 
 		private float coolDown = 1f;
-		private float curTime = 0f;
+		//private float curTime = 0f;
 		
 		public bool isInCoolDown;
 
@@ -74,7 +74,7 @@ namespace StarterAssets
 		public bool _flashlightOn;
 		[SerializeField] GameObject flashLight;
 		[SerializeField] AudioSource flashLightClick;
-		[SerializeField] private Animator Animator;
+		[SerializeField] Animator Animator;
 
 		//Interaction
 		private Interactable _currentInteractable;
@@ -132,7 +132,8 @@ namespace StarterAssets
 
 			if (Input.GetKey(KeyCode.E) && isInCoolDown == false)
 			{
-				_currentInteractable.Interact();
+				if (_currentInteractable)
+					_currentInteractable.Interact();
 				StartCoroutine(StartCoolDown(coolDown));
 			}
 		}
@@ -189,15 +190,19 @@ namespace StarterAssets
 
 		private void Move()
 		{
-			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
-			Animator.SetBool("isRunning", _input.sprint);
-			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
-
-			// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-			// if there is no input, set the target speed to 0
-			if (_input.move == Vector2.zero) targetSpeed = 0.0f;
-			Animator.SetBool("isWalking", _input.move != Vector2.zero);
+			
+			if (_input.move != Vector2.zero)
+			{
+				Animator.SetBool("isWalking", true);
+				Animator.SetBool("isRunning", _input.sprint);
+			}
+			else
+			{
+				Animator.SetBool("isRunning", false);
+				Animator.SetBool("isWalking", false);
+			}
+			
 			// a reference to the players current horizontal velocity
 			float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
@@ -314,6 +319,11 @@ namespace StarterAssets
 			{
 				_currentInteractable = objectToInteract;
 				Debug.Log("Current Interactable: " + _currentInteractable.name);
+			}
+			else
+			{
+				_currentInteractable = null;
+				Debug.Log("Current Interactable is null");
 			}
 
 		}
