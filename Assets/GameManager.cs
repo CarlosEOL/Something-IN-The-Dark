@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     private bool canTimeStop = true;
     private bool isInTimeStop = false;
 
-    [SerializeField] private TextMeshProUGUI currentSceneText;
+    [SerializeField] private TextMeshProUGUI currentObjectiveText;
 
     private float speed = 2;
     private void Start()
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        currentSceneText.text = SceneLoader.Scene.Game.ToString();
+        //currentSceneText.text = SceneLoader.Scene.Game.ToString();
 
         if (!plrController.hasFlashlight)
         {
@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
         else
         {
             barrier.isTrigger = true;
+            currentObjectiveText.text = "Explore.";
         }
 
         if (plr == null)
@@ -51,8 +52,8 @@ public class GameManager : MonoBehaviour
 
         if (barrier == null)
         {
-            SceneLoader.Load(SceneLoader.Scene.Corridor);
-            currentSceneText.text = SceneLoader.Scene.Corridor.ToString();
+            //SceneLoader.Load(SceneLoader.Scene.Corridor);
+            //currentSceneText.text = SceneLoader.Scene.Corridor.ToString();
         }
 
         if (Input.GetKey(KeyCode.LeftControl) && canTimeStop)
